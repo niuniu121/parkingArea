@@ -1,4 +1,3 @@
-<!-- src/views/RegisterView.vue -->
 <template>
   <div class="register">
     <h2>Register</h2>

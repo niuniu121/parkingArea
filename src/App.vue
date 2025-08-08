@@ -1,9 +1,25 @@
-<script setup>
+<template>
+  <div id="app">
+    <NavBar v-if="showNavBar" />
+    <router-view />
+  </div>
+</template>
+
+<script>
+import NavBar from './components/NavBar.vue'
+
+export default {
+  components: {
+    NavBar
+  },
+  computed: {
+    showNavBar() {
+      return this.$route.path !== '/login'
+    }
+  }
+}
 </script>
 
-<template>
-  <router-view />
-</template>
 
 <style scoped>
 .logo {
@@ -12,6 +28,7 @@
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
