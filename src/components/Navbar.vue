@@ -1,21 +1,29 @@
 <template>
   <nav class="navbar">
-    <!-- Logo -->
-    <router-link class="logo" to="/dashboard">Smart Parking</router-link>
+    <div class="navbar-inner">
+      <!-- Logo -->
+      <router-link class="logo" to="/dashboard">Smart Parking</router-link>
 
-    <!-- Hamburger Icon -->
-    <div class="hamburger" @click="toggleMenu">
-      <span :class="{ open: isOpen }"></span>
-      <span :class="{ open: isOpen }"></span>
-      <span :class="{ open: isOpen }"></span>
-    </div>
+      <!-- Hamburger Icon (mobile) -->
+      <div class="hamburger" @click="toggleMenu">
+        <span :class="{ open: isOpen }"></span>
+        <span :class="{ open: isOpen }"></span>
+        <span :class="{ open: isOpen }"></span>
+      </div>
 
-    <!-- Links -->
-    <div class="nav-links" :class="{ show: isOpen }">
-      <router-link to="/dashboard" class="nav-link" @click="closeMenu">Dashboard</router-link>
-      <router-link to="/map" class="nav-link" @click="closeMenu">Map</router-link>
-      <router-link to="/stats" class="nav-link" @click="closeMenu">Stats</router-link>
-      <button class="logout-btn" @click="logout">Logout</button>
+      <!-- Navigation Links -->
+      <div class="nav-links" :class="{ show: isOpen }">
+        <router-link to="/dashboard" class="nav-link" @click="closeMenu"
+          >Dashboard</router-link
+        >
+        <router-link to="/map" class="nav-link" @click="closeMenu"
+          >Map</router-link
+        >
+        <router-link to="/history" class="nav-link" @click="closeMenu"
+          >History</router-link
+        >
+        <button class="logout-btn" @click="logout">Logout</button>
+      </div>
     </div>
   </nav>
 </template>
@@ -24,7 +32,7 @@
 export default {
   data() {
     return {
-      isOpen: false
+      isOpen: false,
     };
   },
   methods: {
@@ -35,33 +43,37 @@ export default {
       this.isOpen = false;
     },
     logout() {
-      localStorage.removeItem('token');
-      this.$router.push('/login');
-    }
-  }
+      localStorage.removeItem("token");
+      this.$router.push("/");
+    },
+  },
 };
 </script>
 
 <style scoped>
 .navbar {
-  background: linear-gradient(to right, #007BFF, #00B4D8);
-  padding: 12px 16px;
+  background: linear-gradient(to right, #007bff, #00b4d8);
   width: 100%;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 100;
+  left: 0;
+  z-index: 1000;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 14px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
-  box-sizing: border-box;
 }
 
 .logo {
   font-size: 24px;
-  font-weight: 600;
-  color: white;
+  font-weight: bold;
+  color: #fff;
   text-decoration: none;
   letter-spacing: 0.5px;
 }
@@ -69,36 +81,39 @@ export default {
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
 }
 
 .nav-link {
   color: white;
   font-weight: 500;
   text-decoration: none;
-  transition: color 0.2s ease, transform 0.2s ease;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
 }
 .nav-link:hover {
-  color: #d1ecff;
-  transform: translateY(-2px);
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
 }
 
 .logout-btn {
-  border: 1px solid white;
-  background: transparent;
-  color: white;
-  padding: 6px 14px;
-  border-radius: 6px;
+  background-color: white;
+  color: #007bff;
+  border: none;
+  padding: 8px 14px;
   font-size: 14px;
+  border-radius: 8px;
   cursor: pointer;
+  font-weight: 500;
   transition: all 0.3s ease;
 }
 .logout-btn:hover {
-  background-color: white;
-  color: #007BFF;
+  background-color: #e0e7ff;
+  color: #0056b3;
 }
 
-/* Hamburger */
+/* Hamburger icon */
 .hamburger {
   display: none;
   flex-direction: column;
@@ -108,7 +123,6 @@ export default {
   cursor: pointer;
 }
 .hamburger span {
-  display: block;
   height: 3px;
   width: 100%;
   background: white;
@@ -125,7 +139,7 @@ export default {
   transform: rotate(-45deg) translateY(-6px);
 }
 
-/* Mobile Style */
+/* Responsive styles */
 @media (max-width: 768px) {
   .hamburger {
     display: flex;
@@ -133,14 +147,14 @@ export default {
 
   .nav-links {
     display: none;
+    flex-direction: column;
     position: absolute;
     top: 64px;
     right: 16px;
-    flex-direction: column;
-    background: rgba(0, 123, 255, 0.95);
-    padding: 20px;
+    background: white;
     border-radius: 12px;
-    z-index: 999;
+    padding: 20px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   }
 
   .nav-links.show {
@@ -148,11 +162,51 @@ export default {
   }
 
   .nav-link {
-    margin-bottom: 14px;
+    color: #007bff;
+    margin-bottom: 12px;
   }
 
   .logout-btn {
-    margin-top: 8px;
+    background-color: #007bff;
+    color: white;
+    width: 100%;
+    margin-top: 10px;
   }
+}
+
+@keyframes navbarSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.navbar {
+  animation: navbarSlideIn 0.6s ease-out forwards;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.nav-links.show {
+  animation: fadeSlideIn 0.3s ease-out;
+}
+
+.nav-link:hover,
+.logout-btn:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
 }
 </style>

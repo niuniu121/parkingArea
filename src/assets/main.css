@@ -1,19 +1,25 @@
-/* Reset & Layout styles */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-html, body, #app {
-  height: 100%;
-  width: 100%;
+/* Reset & Layout */
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #app {
+  /* height: 100%; */
+  width: 100%;
+  font-family: 'Segoe UI', sans-serif;
 }
 
 body {
   background: linear-gradient(to bottom right, #007bff, #00c6ff);
   background-size: cover;
   background-repeat: no-repeat;
+  background-attachment: fixed;
+  overflow-x: hidden;
 }
-
-
+@media (max-width: 768px) {
+  body {
+    background-attachment: scroll !important;
+  }
+}

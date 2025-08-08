@@ -1,13 +1,25 @@
+// vite.config.js
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import path from 'path' // ✅ 引入 Node.js 内置模块 path
+import path from 'path'
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'), // ✅ 添加别名配置
-    },
+      // 这样你在代码里就可以用 @/xxx 来指向 src/xxx
+      '@': path.resolve(__dirname, 'src'),
+    }
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+        secure: false,
+        // 如果你的后端接口没有 /api 前缀，也可以再加一行：
+        // rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
+  }
 })

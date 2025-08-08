@@ -3,12 +3,13 @@ import { createRouter, createWebHistory } from 'vue-router';
 import LoginView from '../view/LoginView.vue';
 import RegisterView from '../view/RegisterView.vue';
 import MapView from '../view/MapView.vue'
+import History from '../view/HistoryView.vue'
 
 
 
 const routes = [
-    { path: '/login', component: LoginView },
-    { path: '/register', component: RegisterView },
+    { path: '/', component: LoginView },
+    { path: '/register', component: RegisterView, meta: { hideNav: true } },
     {
         path: '/dashboard',
         name: 'Dashboard',
@@ -16,6 +17,7 @@ const routes = [
 
     },
     { path: '/map', name: 'Map', component: MapView },
+    { path: '/history', component: History },
 
 ];
 

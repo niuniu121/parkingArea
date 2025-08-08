@@ -1,136 +1,196 @@
 <template>
-  <div class="login-page">
-    <div class="login-box">
-      <div class="logo"></div>
-      <h2>Smart<br />Parking Login</h2>
-      <p class="subtitle">Welcome back! Please login to continue.</p>
-      <form @submit.prevent="handleLogin">
-        <input v-model="email" type="email" placeholder="Enter your email" required />
-        <input v-model="password" type="password" placeholder="Enter your password" required />
-        <button type="submit">Login</button>
+  <div class="auth-wrapper">
+    <div class="auth-card">
+      <div class="auth-logo">P</div>
+      <h1 class="auth-title">Smart<br />Parking Login</h1>
+      <p class="auth-subtitle">Welcome back! Please login to continue.</p>
+
+      <form class="auth-form" @submit.prevent="handleLogin">
+        <div class="field">
+          <i class="far fa-envelope"></i>
+          <input
+            v-model="email"
+            type="email"
+            placeholder="Enter your email"
+            required
+          />
+        </div>
+
+        <div class="field">
+          <i class="fas fa-lock"></i>
+          <input
+            v-model="password"
+            type="password"
+            placeholder="Enter your password"
+            required
+          />
+        </div>
+
+        <button class="btn-primary" type="submit" :disabled="loading">
+          {{ loading ? "Logging in…" : "Login" }}
+        </button>
       </form>
-      <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
+
+      <div class="auth-extra">
+        <span>Don’t have an account?</span>
+        <router-link class="btn-ghost" to="/register"
+          >Create account</router-link
+        >
+      </div>
+
+      <p v-if="error" class="auth-error">{{ error }}</p>
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+import { login } from "@/api/auth";
 
 export default {
-  name: 'LoginPage',
+  name: "LoginView",
   data() {
     return {
-      email: '',
-      password: '',
-      errorMsg: ''
+      email: "",
+      password: "",
+      loading: false,
+      error: "",
     };
+  },
+  async mounted() {
+    const msg = this.$route.query.msg;
+    if (msg) {
+      this.error = decodeURIComponent(msg);
+      setTimeout(() => (this.error = ""), 3000);
+    }
   },
   methods: {
     async handleLogin() {
+      this.loading = true;
+      this.error = "";
       try {
-        const res = await axios.post('http://localhost:5000/api/auth/login', {
-          email: this.email,
-          password: this.password
-        });
-        alert('Login success!');
-        localStorage.setItem('token', res.data.token);
-        localStorage.setItem('email', this.email);
-        this.$router.push('/dashboard');
-      } catch (error) {
-        this.errorMsg = error.response?.data?.message || 'Login failed';
+        const { token } = await login(this.email, this.password);
+        localStorage.setItem("token", token);
+        this.$router.push("/dashboard");
+      } catch (e) {
+        this.error = e?.response?.data?.message || "Login failed";
+      } finally {
+        this.loading = false;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style scoped>
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-}
-
-.login-page {
-  width: 100vw;
-  height: 100vh;
+.auth-wrapper {
+  min-height: 100vh;
   display: flex;
-  justify-content: center;
   align-items: center;
-  background: linear-gradient(145deg, #007BFF, #00B4D8);
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
+  justify-content: center;
+  padding: 40px 16px;
 }
-
-.login-box {
-  background-color: white;
-  padding: 40px 30px;
+.auth-card {
+  width: min(460px, 92vw);
+  background: #fff;
   border-radius: 16px;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 400px;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.18);
+  padding: 28px 28px 20px;
   text-align: center;
 }
-
-.logo {
-  font-size: 40px;
-  margin-bottom: 10px;
-}
-
-h2 {
-  font-size: 28px;
-  margin-bottom: 8px;
-  line-height: 1.2;
-  font-weight: bold;
-  color: #111827;
-}
-
-.subtitle {
-  color: #6b7280;
-  font-size: 14px;
-  margin-bottom: 24px;
-}
-
-form {
+.auth-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #2b6eea;
+  color: #fff;
+  font-weight: 800;
   display: flex;
-  flex-direction: column;
-  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  margin: 8px auto 10px;
+  font-size: 22px;
+  box-shadow: 0 10px 24px rgba(43, 110, 234, 0.28);
 }
-
-input {
+.auth-title {
+  margin: 0 0 6px;
+  color: #1f2937;
+  line-height: 1.2;
+  font-size: 22px;
+  font-weight: 800;
+}
+.auth-subtitle {
+  margin: 0 0 18px;
+  color: #6b7280;
+  font-size: 13px;
+}
+.auth-form {
+  display: grid;
+  gap: 12px;
+  margin: 8px 0 10px;
+}
+.field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
   padding: 10px 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
+  background: #fafafa;
+}
+.field i {
+  color: #64748b;
+}
+.field input {
+  flex: 1;
+  border: 0;
+  background: transparent;
+  outline: 0;
   font-size: 14px;
-  outline: none;
-  transition: border-color 0.3s;
 }
-
-input:focus {
-  border-color: #2563eb;
-}
-
-button {
-  padding: 12px;
-  background-color: #1d4ed8;
-  color: white;
-  font-size: 16px;
-  border: none;
-  border-radius: 8px;
+.btn-primary {
+  width: 100%;
+  height: 44px;
+  border: 0;
+  border-radius: 12px;
+  background: #204fde;
+  color: #fff;
+  font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.3s;
+  box-shadow: 0 12px 24px rgba(32, 79, 222, 0.28);
 }
-
-button:hover {
-  background-color: #2563eb;
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
-
-.error {
-  color: red;
-  margin-top: 16px;
+.auth-extra {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  font-size: 13px;
+  color: #64748b;
+}
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid #dbeafe;
+  background: #f8fbff;
+  color: #1d4ed8;
+  font-weight: 700;
+  text-decoration: none;
+}
+.btn-ghost:hover {
+  background: #eef5ff;
+}
+.auth-error {
+  margin-top: 10px;
+  color: #ef4444;
+  font-weight: 600;
+  font-size: 13px;
 }
 </style>
