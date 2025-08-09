@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import api from "@/api/http";
 import Chart from "chart.js/auto";
 
 export default {
@@ -66,12 +66,9 @@ export default {
   methods: {
     async renderPopulationChart() {
       try {
-        const res = await axios.get(
-          "http://localhost:5000/api/population/trend",
-          {
-            params: { region: "Victoria" },
-          }
-        );
+        const res = await api.get("/api/population/trend", {
+          params: { region: "Victoria" },
+        });
 
         const trend = res.data?.trend || [];
         if (!trend.length) return;
@@ -81,7 +78,6 @@ export default {
         const data = last.map((d) => d.population);
 
         if (this.chart) this.chart.destroy();
-
         const ctx = this.$refs.populationCanvas.getContext("2d");
         this.chart = new Chart(ctx, {
           type: "line",
@@ -103,9 +99,7 @@ export default {
             responsive: true,
             maintainAspectRatio: false,
             resizeDelay: 200,
-
             animation: { duration: 300 },
-
             plugins: {
               legend: { display: false },
               tooltip: {
@@ -116,10 +110,7 @@ export default {
             },
             scales: {
               y: {
-                beginAtZero: false,
-                ticks: {
-                  callback: (v) => new Intl.NumberFormat().format(v),
-                },
+                ticks: { callback: (v) => new Intl.NumberFormat().format(v) },
               },
             },
           },
