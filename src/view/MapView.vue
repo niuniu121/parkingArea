@@ -120,7 +120,7 @@
 <script>
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import axios from "axios";
+import api from "@/api/http";
 
 const AREAS = [
   {
@@ -356,8 +356,8 @@ export default {
     async loadData() {
       try {
         const [baysRes, sensorsRes] = await Promise.all([
-          axios.get("/api/parking/bays"),
-          axios.get("/api/parking/sensors"),
+          api.get("/api/parking/bays"),
+          api.get("/api/parking/sensors"),
         ]);
         this.bays = Array.isArray(baysRes.data) ? baysRes.data : [];
         this.sensors = Array.isArray(sensorsRes.data) ? sensorsRes.data : [];
@@ -537,6 +537,7 @@ export default {
   align-items: center;
   padding: 12px 14px;
   margin: 10px auto 18px;
+  margin-top: 43px;
 }
 .search-icon {
   color: #fff;

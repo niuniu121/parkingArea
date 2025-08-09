@@ -116,7 +116,6 @@ export default {
 <style scoped>
 .history-wrapper {
   min-height: 100vh;
-  background: linear-gradient(145deg, #0072ff, #00c6ff);
   padding: 24px 16px 48px;
   display: flex;
   flex-direction: column;
@@ -137,6 +136,7 @@ export default {
   grid-template-columns: 1fr auto auto;
   gap: 12px;
   align-items: center;
+  margin-top: 68px;
 }
 .header h2 {
   margin: 0;
