@@ -2,14 +2,20 @@
   <div class="auth-wrapper">
     <div class="auth-card">
       <div class="auth-logo">P</div>
+
       <h1 class="auth-title">Smart<br />Parking Login</h1>
       <p class="auth-subtitle">Welcome back! Please login to continue.</p>
+
+      <p v-if="isLocal" class="mode-tip">
+        Local auth mode — accounts are stored in <b>this browser only</b>. Try
+        <code>demo@example.com</code> / <code>123456</code>.
+      </p>
 
       <form class="auth-form" @submit.prevent="handleLogin">
         <div class="field">
           <i class="far fa-envelope"></i>
           <input
-            v-model="email"
+            v-model.trim="email"
             type="email"
             placeholder="Enter your email"
             required
@@ -38,6 +44,7 @@
         >
       </div>
 
+      <p v-if="notice" class="auth-success">{{ notice }}</p>
       <p v-if="error" class="auth-error">{{ error }}</p>
     </div>
   </div>
@@ -45,6 +52,9 @@
 
 <script>
 import { login } from "@/api/auth";
+
+const MODE = import.meta.env.VITE_AUTH_MODE || "api";
+const LS_USERS = "sp_users";
 
 export default {
   name: "LoginView",
@@ -54,25 +64,42 @@ export default {
       password: "",
       loading: false,
       error: "",
+      notice: "",
+      isLocal: MODE === "local",
     };
   },
-  async mounted() {
+  mounted() {
     const msg = this.$route.query.msg;
     if (msg) {
-      this.error = decodeURIComponent(msg);
-      setTimeout(() => (this.error = ""), 3000);
+      this.notice = decodeURIComponent(msg);
+      setTimeout(() => (this.notice = ""), 2500);
+    }
+
+    if (this.isLocal) {
+      try {
+        const users = JSON.parse(localStorage.getItem(LS_USERS) || "{}");
+        if (!users["demo@example.com"]) {
+          users["demo@example.com"] = {
+            email: "demo@example.com",
+            password: "123456",
+            createdAt: Date.now(),
+          };
+          localStorage.setItem(LS_USERS, JSON.stringify(users));
+        }
+      } catch {}
     }
   },
   methods: {
     async handleLogin() {
       this.loading = true;
       this.error = "";
+      this.notice = "";
       try {
         const { token } = await login(this.email, this.password);
         localStorage.setItem("token", token);
         this.$router.push("/dashboard");
       } catch (e) {
-        this.error = e?.response?.data?.message || "Login failed";
+        this.error = e?.response?.data?.message || e?.message || "Login failed";
       } finally {
         this.loading = false;
       }
@@ -119,9 +146,18 @@ export default {
   font-weight: 800;
 }
 .auth-subtitle {
-  margin: 0 0 18px;
+  margin: 0 0 10px;
   color: #6b7280;
   font-size: 13px;
+}
+.mode-tip {
+  margin: 6px 0 12px;
+  font-size: 12.5px;
+  color: #1d4ed8;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  padding: 8px 10px;
+  border-radius: 8px;
 }
 .auth-form {
   display: grid;
@@ -191,6 +227,12 @@ export default {
   margin-top: 10px;
   color: #ef4444;
   font-weight: 600;
+  font-size: 13px;
+}
+.auth-success {
+  margin-top: 10px;
+  color: #16a34a;
+  font-weight: 700;
   font-size: 13px;
 }
 </style>

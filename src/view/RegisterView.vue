@@ -2,13 +2,23 @@
   <div class="auth-wrapper">
     <div class="auth-card">
       <div class="auth-logo">P</div>
+
       <h1 class="auth-title">Create your<br />Smart Parking account</h1>
       <p class="auth-subtitle">It’s quick and free.</p>
+
+      <p v-if="isLocal" class="mode-tip">
+        Local auth mode — accounts are stored in <b>this browser only</b>.
+      </p>
 
       <form class="auth-form" @submit.prevent="handleRegister">
         <div class="field">
           <i class="far fa-envelope"></i>
-          <input v-model="email" type="email" placeholder="Email" required />
+          <input
+            v-model.trim="email"
+            type="email"
+            placeholder="Email"
+            required
+          />
         </div>
 
         <div class="field">
@@ -20,13 +30,6 @@
             required
           />
         </div>
-
-        <!--
-        <div class="field">
-          <i class="fas fa-lock"></i>
-          <input v-model="confirm" type="password" placeholder="Confirm password" required />
-        </div>
-        -->
 
         <button class="btn-primary" type="submit" :disabled="loading">
           {{ loading ? "Creating…" : "Create account" }}
@@ -46,6 +49,7 @@
 
 <script>
 import { register } from "@/api/auth";
+const MODE = import.meta.env.VITE_AUTH_MODE || "api";
 
 export default {
   name: "RegisterView",
@@ -56,16 +60,9 @@ export default {
       message: "",
       error: "",
       loading: false,
+      isLocal: MODE === "local",
     };
   },
-  // mounted() {
-  //   const nav = document.querySelector("nav");
-  //   if (nav) nav.style.display = "none";
-  // },
-  // unmounted() {
-  //   const nav = document.querySelector("nav");
-  //   if (nav) nav.style.display = "";
-  // },
   methods: {
     async handleRegister() {
       this.message = "";
@@ -79,13 +76,14 @@ export default {
       try {
         await register(this.email, this.password);
         this.$router.push({
-          path: "/login",
+          path: "/",
           query: {
             msg: encodeURIComponent("Registration successful, please login."),
           },
         });
       } catch (err) {
-        this.error = err?.response?.data?.message || "Registration failed";
+        this.error =
+          err?.response?.data?.message || err?.message || "Registration failed";
       } finally {
         this.loading = false;
       }
@@ -132,9 +130,18 @@ export default {
   font-weight: 800;
 }
 .auth-subtitle {
-  margin: 0 0 18px;
+  margin: 0 0 10px;
   color: #6b7280;
   font-size: 13px;
+}
+.mode-tip {
+  margin: 6px 0 12px;
+  font-size: 12.5px;
+  color: #1d4ed8;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  padding: 8px 10px;
+  border-radius: 8px;
 }
 .auth-form {
   display: grid;
