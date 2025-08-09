@@ -1,12 +1,10 @@
 // src/api/index.js
-import axios from "axios";
-
-const API_BASE = "http://localhost:5000/api/parking";
+import http from './http';
 
 export function fetchSensorStatuses() {
-    return axios.get(`${API_BASE}/sensors`);
+    return http.get('/parking/sensors');
 }
 
 export function fetchParkingBays() {
-    return axios.get(`${API_BASE}/bays`);
+    return http.get('/parking/bays');
 }
