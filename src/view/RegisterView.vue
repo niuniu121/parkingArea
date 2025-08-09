@@ -58,14 +58,14 @@ export default {
       loading: false,
     };
   },
-  mounted() {
-    const nav = document.querySelector("nav");
-    if (nav) nav.style.display = "none";
-  },
-  unmounted() {
-    const nav = document.querySelector("nav");
-    if (nav) nav.style.display = "";
-  },
+  // mounted() {
+  //   const nav = document.querySelector("nav");
+  //   if (nav) nav.style.display = "none";
+  // },
+  // unmounted() {
+  //   const nav = document.querySelector("nav");
+  //   if (nav) nav.style.display = "";
+  // },
   methods: {
     async handleRegister() {
       this.message = "";
