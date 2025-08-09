@@ -1,8 +1,8 @@
 // src/api/auth.js
-import http from './http';
-
-export const register = (email, password) =>
-    http.post('/auth/register', { email, password });
+import api from './http';
 
 export const login = (email, password) =>
-    http.post('/auth/login', { email, password });
+    api.post('/api/auth/login', { email, password }).then(r => r.data);
+
+export const register = (email, password) =>
+    api.post('/api/auth/register', { email, password }).then(r => r.data);
