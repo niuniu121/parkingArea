@@ -6,9 +6,9 @@
       <h1 class="auth-title">Create your<br />Smart Parking account</h1>
       <p class="auth-subtitle">It’s quick and free.</p>
 
-      <p v-if="isLocal" class="mode-tip">
+      <!-- <p v-if="isLocal" class="mode-tip">
         Local auth mode — accounts are stored in <b>this browser only</b>.
-      </p>
+      </p> -->
 
       <form class="auth-form" @submit.prevent="handleRegister">
         <div class="field">

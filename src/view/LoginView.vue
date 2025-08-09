@@ -6,10 +6,10 @@
       <h1 class="auth-title">Smart<br />Parking Login</h1>
       <p class="auth-subtitle">Welcome back! Please login to continue.</p>
 
-      <p v-if="isLocal" class="mode-tip">
+      <!-- <p v-if="isLocal" class="mode-tip">
         Local auth mode — accounts are stored in <b>this browser only</b>. Try
         <code>demo@example.com</code> / <code>123456</code>.
-      </p>
+      </p> -->
 
       <form class="auth-form" @submit.prevent="handleLogin">
         <div class="field">
