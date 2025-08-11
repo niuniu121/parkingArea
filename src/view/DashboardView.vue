@@ -5,7 +5,7 @@
     <section class="dashboard-section animate__animated animate__fadeInUp">
       <div class="section-header">
         <i class="fas fa-chart-line section-icon"></i>
-        <h2>Melbourne CBD Population Growth</h2>
+        <h2>Melbourne Resident Population Growth</h2>
       </div>
 
       <div class="chart-wrap">
