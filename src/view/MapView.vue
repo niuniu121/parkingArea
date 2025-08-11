@@ -5,7 +5,7 @@
       <i class="fas fa-search search-icon"></i>
       <input
         v-model="query"
-        placeholder="Search by postcode, street, area..."
+        placeholder="Search by street, area..."
         @keydown.enter="searchParking"
       />
       <button class="btn-primary" @click="searchParking">
