@@ -78,9 +78,9 @@ export default {
     if (this.isLocal) {
       try {
         const users = JSON.parse(localStorage.getItem(LS_USERS) || "{}");
-        if (!users["demo@example.com"]) {
-          users["demo@example.com"] = {
-            email: "demo@example.com",
+        if (!users["demo@gmail.com"]) {
+          users["demo@gmail.com"] = {
+            email: "demo@gmail.com",
             password: "123456",
             createdAt: Date.now(),
           };
