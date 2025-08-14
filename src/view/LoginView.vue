@@ -182,6 +182,7 @@ export default {
   background: transparent;
   outline: 0;
   font-size: 14px;
+  color: #111;
 }
 .btn-primary {
   width: 100%;
